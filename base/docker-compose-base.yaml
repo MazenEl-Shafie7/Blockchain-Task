@@ -1,0 +1,154 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  orderer.mazen.com:
+    container_name: orderer.mazen.com
+    extends:
+      file: peer-base.yaml
+      service: orderer-base
+    volumes:
+        - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ../crypto-config/ordererOrganizations/mazen.com/orderers/orderer.mazen.com/msp:/var/hyperledger/orderer/msp
+        - ../crypto-config/ordererOrganizations/mazen.com/orderers/orderer.mazen.com/tls/:/var/hyperledger/orderer/tls
+        - orderer.mazen.com:/var/hyperledger/production/orderer
+    ports:
+      - 7050:7050
+
+  peer0.microsoft.mazen.com:
+    container_name: peer0.microsoft.mazen.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.microsoft.mazen.com
+      - CORE_PEER_ADDRESS=peer0.microsoft.mazen.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.microsoft.mazen.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.microsoft.mazen.com:8051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.microsoft.mazen.com:7051
+      - CORE_PEER_LOCALMSPID=microsoftMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/microsoft.mazen.com/peers/peer0.microsoft.mazen.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/microsoft.mazen.com/peers/peer0.microsoft.mazen.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.microsoft.mazen.com:/var/hyperledger/production
+    ports:
+      - 7051:7051
+
+  peer1.microsoft.mazen.com:
+    container_name: peer1.microsoft.mazen.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.microsoft.mazen.com
+      - CORE_PEER_ADDRESS=peer1.microsoft.mazen.com:8051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
+      - CORE_PEER_CHAINCODEADDRESS=peer1.microsoft.mazen.com:8052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.microsoft.mazen.com:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.microsoft.mazen.com:7051
+      - CORE_PEER_LOCALMSPID=microsoftMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/microsoft.mazen.com/peers/peer1.microsoft.mazen.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/microsoft.mazen.com/peers/peer1.microsoft.mazen.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.microsoft.mazen.com:/var/hyperledger/production
+
+    ports:
+      - 8051:8051
+
+  peer0.oracle.mazen.com:
+    container_name: peer0.oracle.mazen.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.oracle.mazen.com
+      - CORE_PEER_ADDRESS=peer0.oracle.mazen.com:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.oracle.mazen.com:9052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.oracle.mazen.com:9051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.oracle.mazen.com:10051
+      - CORE_PEER_LOCALMSPID=oracleMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/oracle.mazen.com/peers/peer0.oracle.mazen.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/oracle.mazen.com/peers/peer0.oracle.mazen.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.oracle.mazen.com:/var/hyperledger/production
+    ports:
+      - 9051:9051
+
+  peer1.oracle.mazen.com:
+    container_name: peer1.oracle.mazen.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.oracle.mazen.com
+      - CORE_PEER_ADDRESS=peer1.oracle.mazen.com:10051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
+      - CORE_PEER_CHAINCODEADDRESS=peer1.oracle.mazen.com:10052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.oracle.mazen.com:10051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.oracle.mazen.com:9051
+      - CORE_PEER_LOCALMSPID=oracleMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/oracle.mazen.com/peers/peer1.oracle.mazen.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/oracle.mazen.com/peers/peer1.oracle.mazen.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.oracle.mazen.com:/var/hyperledger/production
+    ports:
+      - 10051:10051
+
+  peer0.dell.mazen.com:
+    container_name: peer0.dell.mazen.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.dell.mazen.com
+      - CORE_PEER_ADDRESS=peer0.dell.mazen.com:11051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:11051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.dell.mazen.com:11052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:11052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.dell.mazen.com:11051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.dell.mazen.com:12051
+      - CORE_PEER_LOCALMSPID=dellMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/dell.mazen.com/peers/peer0.dell.mazen.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/dell.mazen.com/peers/peer0.dell.mazen.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.dell.mazen.com:/var/hyperledger/production
+    ports:
+      - 11051:11051
+
+  peer1.dell.mazen.com:
+    container_name: peer1.dell.mazen.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.dell.mazen.com
+      - CORE_PEER_ADDRESS=peer1.dell.mazen.com:12051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:12051
+      - CORE_PEER_CHAINCODEADDRESS=peer1.dell.mazen.com:12052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:12052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.dell.mazen.com:12051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.dell.mazen.com:11051
+      - CORE_PEER_LOCALMSPID=dellMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/dell.mazen.com/peers/peer1.dell.mazen.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/dell.mazen.com/peers/peer1.dell.mazen.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.dell.mazen.com:/var/hyperledger/production
+    ports:
+      - 12051:12051

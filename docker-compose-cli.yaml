@@ -1,0 +1,113 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+volumes:
+  orderer.mazen.com:
+  peer0.microsoft.mazen.com:
+  peer1.microsoft.mazen.com:
+  peer0.oracle.mazen.com:
+  peer1.oracle.mazen.com:
+  peer0.dell.mazen.com:
+  peer1.dell.mazen.com:
+
+networks:
+  byfn:
+
+services:
+
+  orderer.mazen.com:
+    extends:
+      file:   base/docker-compose-base.yaml
+      service: orderer.mazen.com
+    container_name: orderer.mazen.com
+    networks:
+      - byfn
+
+  peer0.microsoft.mazen.com:
+    container_name: peer0.microsoft.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.microsoft.mazen.com
+    networks:
+      - byfn
+
+  peer1.microsoft.mazen.com:
+    container_name: peer1.microsoft.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.microsoft.mazen.com
+    networks:
+      - byfn
+
+  peer0.oracle.mazen.com:
+    container_name: peer0.oracle.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.oracle.mazen.com
+    networks:
+      - byfn
+
+  peer1.oracle.mazen.com:
+    container_name: peer1.oracle.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.oracle.mazen.com
+    networks:
+      - byfn
+
+  peer0.dell.mazen.com:
+    container_name: peer0.dell.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.dell.mazen.com
+    networks:
+      - byfn
+
+  peer1.dell.mazen.com:
+    container_name: peer1.dell.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.dell.mazen.com
+    networks:
+      - byfn
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-tools:1.4
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0.microsoft.mazen.com:7051
+      - CORE_PEER_LOCALMSPID=microsoftMSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/microsoft.mazen.com/peers/peer0.microsoft.mazen.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/microsoft.mazen.com/peers/peer0.microsoft.mazen.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/microsoft.mazen.com/peers/peer0.microsoft.mazen.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/microsoft.mazen.com/users/Admin@microsoft.mazen.com/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./../chaincode/:/opt/gopath/src/github.com/chaincode
+        - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+    depends_on:
+      - orderer.mazen.com
+      - peer0.microsoft.mazen.com
+      - peer1.microsoft.mazen.com
+      - peer0.oracle.mazen.com
+      - peer1.oracle.mazen.com
+      - peer0.dell.mazen.com
+      - peer1.dell.mazen.com
+    networks:
+      - byfn

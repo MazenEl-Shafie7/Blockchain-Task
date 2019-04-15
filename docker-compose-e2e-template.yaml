@@ -1,0 +1,125 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+volumes:
+  orderer.mazen.com:
+  peer0.microsoft.mazen.com:
+  peer1.microsoft.mazen.com:
+  peer0.oracle.mazen.com:
+  peer1.oracle.mazen.com:
+  peer0.dell.mazen.com:
+  peer1.dell.mazen.com:
+
+networks:
+  byfn:
+services:
+  ca0:
+    image: hyperledger/fabric-ca:1.4
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-microsoft
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.microsoft.mazen.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA1_PRIVATE_KEY
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.microsoft.mazen.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/CA1_PRIVATE_KEY -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/microsoft.mazen.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_peermicrosoft
+    networks:
+      - byfn
+
+  ca1:
+    image: hyperledger/fabric-ca:1.4
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-oracle
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.oracle.mazen.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA2_PRIVATE_KEY
+    ports:
+      - "8054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.oracle.mazen.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/CA2_PRIVATE_KEY -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/oracle.mazen.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_peeroracle
+    networks:
+      - byfn
+
+  ca2:
+    image: hyperledger/fabric-ca:1.4
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-dell
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.dell.mazen.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/CA3_PRIVATE_KEY
+    ports:
+      - "9054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.dell.mazen.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/CA3_PRIVATE_KEY -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/dell.mazen.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca_peerdell
+    networks:
+      - byfn
+
+  orderer.mazen.com:
+    extends:
+      file:   base/docker-compose-base.yaml
+      service: orderer.mazen.com
+    container_name: orderer.mazen.com
+    networks:
+      - byfn
+
+  peer0.microsoft.mazen.com:
+    container_name: peer0.microsoft.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.microsoft.mazen.com
+    networks:
+      - byfn
+
+  peer1.microsoft.mazen.com:
+    container_name: peer1.microsoft.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.microsoft.mazen.com
+    networks:
+      - byfn
+
+  peer0.oracle.mazen.com:
+    container_name: peer0.oracle.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.oracle.mazen.com
+    networks:
+      - byfn
+
+  peer1.oracle.mazen.com:
+    container_name: peer1.oracle.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.oracle.mazen.com
+    networks:
+      - byfn
+
+  peer0.dell.mazen.com:
+    container_name: peer0.dell.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.dell.mazen.com
+    networks:
+      - byfn
+
+  peer1.dell.mazen.com:
+    container_name: peer1.dell.mazen.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.dell.mazen.com
+    networks:
+      - byfn
