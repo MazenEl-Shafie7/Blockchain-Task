@@ -23,14 +23,14 @@ LANGUAGE=`echo "$LANGUAGE" | tr [:upper:] [:lower:]`
 COUNTER=1
 MAX_RETRY=10
 
-CC_SRC_PATH="github.com/chaincode/chaincode_example02/go/"
-if [ "$LANGUAGE" = "node" ]; then
-	CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/node/"
-fi
-
-if [ "$LANGUAGE" = "java" ]; then
-	CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/java/"
-fi
+#CC_SRC_PATH="github.com/chaincode/chaincode_example02/go/"
+#if [ "$LANGUAGE" = "node" ]; then
+#	CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/node/"
+#fi
+#
+#if [ "$LANGUAGE" = "java" ]; then
+#	CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/java/"
+#fi
 
 echo "Channel name : "$CHANNEL_NAME
 
@@ -83,30 +83,30 @@ echo "Updating anchor peers for oracle..."
 updateAnchorPeers 0 2
 
 ## Install chaincode on peer0.microsoft and peer0.oracle
-echo "Installing chaincode on peer0.microsoft..."
-installChaincode 0 1
-echo "Install chaincode on peer0.oracle..."
-installChaincode 0 2
+##echo "Installing chaincode on peer0.microsoft..."
+##installChaincode 0 1
+##echo "Install chaincode on peer0.oracle..."
+##installChaincode 0 2
 
 # Instantiate chaincode on peer0.oracle
-echo "Instantiating chaincode on peer0.oracle..."
-instantiateChaincode 0 2
+##echo "Instantiating chaincode on peer0.oracle..."
+##instantiateChaincode 0 2
 
 # Query chaincode on peer0.microsoft
-echo "Querying chaincode on peer0.microsoft..."
-chaincodeQuery 0 1 100
+##echo "Querying chaincode on peer0.microsoft..."
+##chaincodeQuery 0 1 100
 
 # Invoke chaincode on peer0.microsoft and peer0.oracle
-echo "Sending invoke transaction on peer0.microsoft peer0.oracle..."
-chaincodeInvoke 0 1 0 2
+##echo "Sending invoke transaction on peer0.microsoft peer0.oracle..."
+##chaincodeInvoke 0 1 0 2
 
 ## Install chaincode on peer1.oracle
-echo "Installing chaincode on peer1.oracle..."
-installChaincode 1 2
+##echo "Installing chaincode on peer1.oracle..."
+##installChaincode 1 2
 
 # Query on chaincode on peer1.oracle, check if the result is 90
-echo "Querying chaincode on peer1.oracle..."
-chaincodeQuery 1 2 90
+##echo "Querying chaincode on peer1.oracle..."
+##chaincodeQuery 1 2 90
 
 echo
 echo "========= All GOOD, BYFN execution completed =========== "
